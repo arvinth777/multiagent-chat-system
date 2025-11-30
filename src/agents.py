@@ -248,7 +248,7 @@ class Summarizer:
             "**Subjective:** Patient's reported symptoms, history, CURRENT MEDICATIONS, and QUESTIONS/CONCERNS (use 'patient reports...').\n"
             "**Objective:** Doctor's observations, vitals, and physical exam findings.\n"
             "**Assessment:** All diagnoses mentioned (confirmed or suspected).\n"
-            "**Plan:** ALL treatments, new prescriptions, RECOMMENDATIONS (e.g., diet, exercise, OTC meds), and follow-up instructions.\n\n"
+            "**Plan:** ALL treatments, new prescriptions, RECOMMENDATIONS, and follow-up instructions.\n\n"
             "Review your output: Did you include every single medication name and dosage from the input? If not, fix it."
         )
         try:

@@ -94,11 +94,13 @@ class ClinicalPipeline:
         }
         
         # Add translation info if used
-        if translation_used:
             result["translation"] = {
                 "source_language": source_language,
                 "original_text": raw_text[:500],  # Store preview
                 "translated_text": current_text[:500]
             }
+            
+            if not trans_result.get("ok"):
+                result.setdefault("warnings", []).append(f"Translation failed: {trans_result.get('error')}")
         
         return result

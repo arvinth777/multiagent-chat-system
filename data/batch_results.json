@@ -3,9 +3,9 @@
     "total_records": 5,
     "successful_records": 5,
     "average_rouge_scores": {
-      "rouge1": 0.21999251662122074,
-      "rouge2": 0.047650667723457725,
-      "rougeL": 0.12704111446251853
+      "rouge1": 0.14898294401829984,
+      "rouge2": 0.06157321124189154,
+      "rougeL": 0.11399647790098262
     }
   },
   "results": [
@@ -21,20 +21,22 @@
           "diagnoses": [],
           "vitals": {}
         },
-        "summary": "SOAP Note\n\n**Subjective:**\n\n*   Chief Complaint: None reported.\n*   Symptoms: None reported.\n*   Patient denies any current complaints.\n\n**Objective:**\n\n*   Vitals: No vitals data provided.\n*   Physical Exam: Not performed.\n\n**Assessment:**\n\n*   Patient presents with no reported chief complaint or symptoms.\n*   Further evaluation is needed to determine the patient's current health status.\n\n**Plan:**\n\n*   Obtain a complete set of vital signs.\n*   Perform a focused physical examination based on any new information.\n*   Inquire about any new or existing medical conditions, medications, and allergies.\n*   Address any identified concerns and develop an appropriate plan of care.",
+        "summary": "**Subjective:** Patient reports no chief complaint or symptoms. Patient reports taking no current medications. Patient reports no diagnoses.\n\n**Objective:** No doctor's observations, vitals, or physical exam findings are available.\n\n**Assessment:** No diagnoses are mentioned.\n\n**Plan:** No treatments, new prescriptions, recommendations, or follow-up instructions are available.",
         "validation_result": {
           "status": "FAIL",
           "issues": [
-            "The summary does not address the patient's questions about the back issue, annular bulging, and tear.",
-            "The summary does not reflect the doctor's response to the patient's query."
+            "Summary states 'Patient reports no diagnoses' which contradicts the source where the patient explicitly asks about diagnoses (annular bulging and tear).",
+            "Summary states 'No diagnoses are mentioned' in the Assessment section, which contradicts the source where the patient explicitly asks about diagnoses (annular bulging and tear)."
           ],
-          "missing_info": [
-            "Patient's questions about abutting and abutment of the nerve root.",
-            "Explanation of abutting and abutment of the nerve root.",
-            "Treatment for annular bulging and tear.",
-            "Doctor's response to the patient's query."
-          ],
+          "missing_info": [],
           "hallucinations": []
+        },
+        "timings": {
+          "privacy_guard": 1.656390905380249,
+          "clinical_extractor": 1.7926247119903564,
+          "summarizer": 1.3265089988708496,
+          "validator": 1.7844409942626953,
+          "total": 6.560824871063232
         }
       }
     },
@@ -75,24 +77,19 @@
             "Temp": ""
           }
         },
-        "summary": "Here's a SOAP note based on the provided clinical data:\n\n**SOAP Note**\n\n**Subjective:**\n\nPatient reports weight gain and body pain.\n\n**Objective:**\n\n*   Vitals: Not provided.\n*   Medications: Levothyroxine, Buspar, and Benadryl.\n*   Diagnoses: Hypothyroidism.\n\n**Assessment:**\n\nPatient presenting with symptoms of weight gain and body pain. Hypothyroidism is a known diagnosis. Further evaluation needed to determine if symptoms are related to thyroid function or other causes.\n\n**Plan:**\n\n1.  Obtain vital signs (BP, HR, Temp).\n2.  Review medication list for appropriateness.\n3.  Order TSH and free T4 to assess thyroid function.\n4.  Discuss symptom management and potential causes of weight gain and body pain.\n5.  Schedule follow-up based on lab results and clinical findings.",
+        "summary": "**Subjective:** Patient reports weight gain and body pain. Patient reports current medications of Levothyroxine, Buspar, and Benedryl.\n\n**Objective:** Vitals: BP: , HR: , Temp: . Physical exam findings: Not provided.\n\n**Assessment:** Hypothyroidism.\n\n**Plan:** No new treatments or recommendations provided.",
         "validation_result": {
-          "status": "FAIL",
-          "issues": [
-            "The summary does not accurately reflect the doctor's advice regarding diet and exercise.",
-            "The summary does not include the doctor's assessment of the patient's thyroid levels and medication management.",
-            "The summary does not mention the doctor's advice on maintaining a positive outlook."
-          ],
-          "missing_info": [
-            "Doctor's advice on diet (avoiding junk food, processed foods, sweets, fatty foods, sodas, alcohol, smoking, and binge eating; following food timings; small frequent meals; fruits or low-calorie snacks; unsalted nuts; flax seeds; turmeric, fenugreek; low-fat milk, curd; egg white, lean chicken, or fish; avoiding organ meats).",
-            "Doctor's advice on exercise (brisk walking, alternating with exercises if there is body pain).",
-            "Doctor's advice on maintaining normal TSH levels.",
-            "Doctor's advice on maintaining a positive outlook.",
-            "Doctor's assessment of the patient's thyroid levels and medication management.",
-            "Doctor's question about the patient's menstrual cycle.",
-            "Doctor's follow-up instructions."
-          ],
+          "status": "PASS",
+          "issues": [],
+          "missing_info": [],
           "hallucinations": []
+        },
+        "timings": {
+          "privacy_guard": 3.6264021396636963,
+          "clinical_extractor": 2.117964029312134,
+          "summarizer": 1.6086852550506592,
+          "validator": 1.1931190490722656,
+          "total": 8.548452854156494
         }
       }
     },
@@ -113,20 +110,21 @@
           ],
           "vitals": {}
         },
-        "summary": "Here's a SOAP note based on the provided clinical data:\n\n**SOAP Note**\n\n**Subjective:**\n\n*   **Chief Complaint:** Acne\n*   **History of Present Illness:** Patient reports acne with associated red bumps.\n\n**Objective:**\n\n*   **Vitals:** Not provided.\n*   **Physical Exam:** Not provided.\n\n**Assessment:**\n\n*   Acne vulgaris\n\n**Plan:**\n\n*   Further assessment needed, including a physical exam to determine the severity of acne.\n*   Discuss treatment options based on severity (e.g., topical medications, lifestyle modifications).\n*   Schedule follow-up appointment.",
+        "summary": "**Subjective:** Patient reports a chief complaint of acne. Patient reports symptoms of acne and red bumps. Patient reports no current medications.\n\n**Objective:** No objective findings are available in the provided data. Vitals are not available.\n\n**Assessment:** Acne vulgaris.\n\n**Plan:** No plan information is available in the provided data.",
         "validation_result": {
-          "status": "FAIL",
-          "issues": [
-            "The summary does not include the patient's history of acne, including the location of the acne, the patient's attempts to treat it, and the patient's concerns about the acne.",
-            "The summary does not include the doctor's assessment of the acne, including the multifactorial etiology and the need for oral and topical medications.",
-            "The summary does not include the doctor's plan for treatment, including the need to confirm the grade of acne and the potential medications."
-          ],
+          "status": "PASS",
+          "issues": [],
           "missing_info": [
-            "Patient's history of acne, including the location of the acne, the patient's attempts to treat it, and the patient's concerns about the acne.",
-            "Doctor's assessment of the acne, including the multifactorial etiology and the need for oral and topical medications.",
-            "Doctor's plan for treatment, including the need to confirm the grade of acne and the potential medications."
+            "Plan information"
           ],
           "hallucinations": []
+        },
+        "timings": {
+          "privacy_guard": 2.406917095184326,
+          "clinical_extractor": 1.6350610256195068,
+          "summarizer": 1.6743459701538086,
+          "validator": 1.4795560836791992,
+          "total": 7.197408199310303
         }
       }
     },
@@ -157,24 +155,19 @@
             "Temp": ""
           }
         },
-        "summary": "SOAP Note\n\n**Subjective:**\n\nPatient reports an \"uncomfortable feeling\" between the mid-spine and left shoulder blade. Symptoms include stiffness, popping sensations in the bones, discomfort when sitting, and a history of the shoulder \"popping out of place.\" Patient also reports shaking and tingling. No current medications.\n\n**Objective:**\n\nVitals: Not provided.\n\n**Assessment:**\n\n1.  Improper scapulothoracic mobility.\n2.  Facet joint irritation in the neck with intervertebral hypermobility.\n\n**Plan:**\n\n1.  Further evaluation may be needed, depending on the vitals.\n2.  Recommend physical therapy to address scapulothoracic mobility and neck facet joint irritation.\n3.  Educate patient on proper posture and body mechanics.\n4.  Consider imaging (X-ray or MRI) if symptoms worsen or do not improve with conservative management.\n5.  Follow up as needed.",
+        "summary": "**Subjective:** Patient reports an \"uncomfortable feeling in between the middle of my spine and left shoulder blade.\" Patient reports associated symptoms of stiffness, bones pop, uncomfortable to sit, shoulder would pop out of place, popping sensation, shaking, and tingling. Patient reports no current medications. Patient reports no questions or concerns.\n\n**Objective:** Vitals: BP: \"\", HR: \"\", Temp: \"\". Physical exam findings are not provided.\n\n**Assessment:** Diagnoses include improper scapulothoracic mobility and facet joint irritation in the neck with intervertebral hypermobility.\n\n**Plan:** No treatments, new prescriptions, recommendations, or follow-up instructions are provided.",
         "validation_result": {
-          "status": "FAIL",
-          "issues": [
-            "The summary includes a 'Plan' section that goes beyond the information provided in the source text. The source text only provides recommendations, not a detailed plan.",
-            "The summary includes a 'Follow up as needed' in the plan, which is not explicitly mentioned in the source text.",
-            "The summary includes 'Consider imaging (X-ray or MRI) if symptoms worsen or do not improve with conservative management' in the plan, which is not explicitly mentioned in the source text.",
-            "The summary includes 'Educate patient on proper posture and body mechanics' in the plan, which is not explicitly mentioned in the source text.",
-            "The summary includes 'Recommend physical therapy to address scapulothoracic mobility and neck facet joint irritation' in the plan, which is not explicitly mentioned in the source text.",
-            "The summary includes 'Further evaluation may be needed, depending on the vitals' in the plan, which is not explicitly mentioned in the source text."
-          ],
-          "missing_info": [
-            "The summary does not include the doctor's recommendations for icing, stretching, and massage.",
-            "The summary does not include the doctor's advice to revert in case of need."
-          ],
-          "hallucinations": [
-            "The summary includes a 'Plan' section that contains information not present in the source text, such as physical therapy, imaging, and patient education."
-          ]
+          "status": "PASS",
+          "issues": [],
+          "missing_info": [],
+          "hallucinations": []
+        },
+        "timings": {
+          "privacy_guard": 2.750555992126465,
+          "clinical_extractor": 2.042830228805542,
+          "summarizer": 2.022749900817871,
+          "validator": 1.5618741512298584,
+          "total": 8.380975008010864
         }
       }
     },
@@ -202,22 +195,22 @@
             "Temp": "100 F"
           }
         },
-        "summary": "Here's a SOAP note based on the provided clinical data:\n\n**SOAP Note**\n\n**Subjective:**\n\n*   **Chief Complaint:** Patient reports being worried about HIV.\n*   **History of Present Illness:** Patient reports symptoms including cold, itchy skin, fever (100F), mild night sweats, mild sore throat, slight weight loss, and tiredness.\n*   **Medications:** None reported.\n\n**Objective:**\n\n*   **Vitals:** Temp: 100 F, BP: Not documented, HR: Not documented.\n*   **Physical Exam:** (Requires further information - not provided in the data)\n\n**Assessment:**\n\n*   Patient presents with a constellation of symptoms concerning for possible viral illness. Patient's primary concern is HIV.\n*   Differential diagnoses include: Viral syndrome, possible early HIV infection (given patient's concern and some non-specific symptoms), other infectious etiologies.\n\n**Plan:**\n\n*   Obtain a complete history, including sexual history, risk factors for HIV, and detailed symptom onset and progression.\n*   Perform a complete physical exam.\n*   Order HIV screening (antibody/antigen test).\n*   Order CBC, CMP, and other labs as clinically indicated based on history and physical exam findings.\n*   Provide patient education regarding HIV transmission, testing, and results.\n*   Schedule follow-up appointment to discuss lab results and further management.",
+        "summary": "**Subjective:** Patient reports to the clinic today with a chief complaint of being worried about HIV. Patient reports experiencing a cold, itchy skin, fever, mild night sweats, mild sore throat, slight weight loss, and tiredness. Patient reports no current medications.\n\n**Objective:**\n*   Vitals: Temperature 100 F, BP: Not provided, HR: Not provided.\n*   Physical Exam: Not provided.\n\n**Assessment:**\n*   Patient is concerned about HIV.\n*   Patient presents with symptoms concerning for possible infection.\n\n**Plan:**\n*   No medications prescribed at this time.\n*   Further evaluation is needed to determine the cause of the patient's symptoms.\n*   Order HIV testing.\n*   Follow up as needed.",
         "validation_result": {
-          "status": "FAIL",
-          "issues": [
-            "The summary does not accurately reflect the information provided in the source text. The summary is a SOAP note template, but it does not accurately represent the patient's information.",
-            "The summary includes information that is not present in the source text, such as the plan to order CBC, CMP, and other labs. The source text only mentions an HIV test.",
-            "The summary does not include the doctor's response to the patient's concerns."
-          ],
+          "status": "PASS",
+          "issues": [],
           "missing_info": [
-            "The doctor's assessment and plan from the source text.",
-            "Details of the HIV test performed (finger prick, 20-minute result, accuracy, and timing of testing)."
+            "Specifics of the HIV test performed (e.g., finger prick, rapid test)",
+            "Doctor's recommendations for follow-up testing (RNA PCR, P24)"
           ],
-          "hallucinations": [
-            "The entire SOAP note structure is a hallucination, as the source text is a patient-doctor interaction.",
-            "The plan to order CBC, CMP, and other labs is not mentioned in the source text."
-          ]
+          "hallucinations": []
+        },
+        "timings": {
+          "privacy_guard": 3.720003128051758,
+          "clinical_extractor": 1.9180819988250732,
+          "summarizer": 2.3778679370880127,
+          "validator": 2.036993980407715,
+          "total": 10.055168151855469
         }
       }
     }

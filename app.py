@@ -19,6 +19,11 @@ st.markdown("### Research Grade 5-Agent System")
     if 'results' in st.session_state:
         results = st.session_state['results']
         
+        # Display Warnings (e.g. Translation failure)
+        if results.get('warnings'):
+            for w in results['warnings']:
+                st.error(f"⚠️ {w}")
+        
         # Privacy Dashboard (remains same)
         # ... 
         
@@ -170,7 +175,17 @@ Agent scans for clinical patterns:
                 if "PASSED" in str(val_result).upper():
                     st.success(val_result)
                 else:
+                else:
                     st.warning(val_result)
+        
+        st.markdown("---")
+        c1, c2 = st.columns(2)
+        with c1:
+            st.download_button("📥 Download SOAP Note", results.get('summary', ''), file_name="soap_note.txt")
+        with c2:
+            if st.button("🗑️ Clear Results"):
+                del st.session_state['results']
+                st.rerun()
 
 # Footer
 st.markdown("---")
@@ -281,6 +296,30 @@ if os.path.exists(batch_file):
     m1.metric("Total Records", total_records)
     m2.metric("Validation Pass Rate", f"{(pass_count/total_records)*100:.1f}%")
     m3.metric("Issues Detected", fail_count)
+    
+    # Privacy Dashboard
+    st.subheader("🛡️ Privacy Preservation Layer")
+    
+    # Calculate PII redactions across all records
+    total_names_redacted = 0
+    total_dates_redacted = 0
+    total_locations_masked = 0
+    total_contacts_removed = 0
+    
+    for record in batch_data:
+        redacted_text = record.get('ai_output', {}).get('anonymized_text', '')
+        r_lower = redacted_text.lower()
+        total_names_redacted += r_lower.count("[patient_name]") + r_lower.count("[doctor_name]")
+        total_dates_redacted += r_lower.count("[date]")
+        total_locations_masked += r_lower.count("[location]")
+        total_contacts_removed += r_lower.count("[contact_info]") + r_lower.count("[email]")
+    
+    col1, col2, col3, col4, col5 = st.columns(5)
+    col1.metric("Names Redacted", total_names_redacted)
+    col2.metric("Dates Redacted", total_dates_redacted)
+    col3.metric("Locations Masked", total_locations_masked)
+    col4.metric("Contacts Removed", total_contacts_removed)
+    col5.metric("Total Redactions", total_names_redacted + total_dates_redacted + total_locations_masked + total_contacts_removed)
     
     
     # Validation Status Breakdown

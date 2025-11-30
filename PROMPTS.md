@@ -234,6 +234,6 @@ From batch processing (5 samples):
 
 ---
 
-**Last Updated:** November 30, 2024  
+**Last Updated:** November 30, 2025  
 **Model:** Google Gemini 2.0 Flash Lite  
 **Framework:** LangChain
