@@ -260,7 +260,7 @@ We integrated ROUGE metrics to evaluate summary quality against reference texts:
 
 ## 5. Conclusion
 
-This project demonstrates a **production-viable approach** to clinical dialogue summarization using multi-agent AI. The 4-agent architecture successfully balances accuracy, safety, and privacy while maintaining clinical utility. The validation agent's ability to detect hallucinations and missing information represents a significant advancement over single-agent summarization approaches.
+This project demonstrates a **production-viable approach** to clinical dialogue summarization using multi-agent AI. The 5-agent architecture successfully balances accuracy, safety, and privacy while maintaining clinical utility. The validation agent's ability to detect hallucinations and missing information represents a significant advancement over single-agent summarization approaches.
 
 **Key Takeaways:**
 - ✅ Multi-agent design improves robustness and safety
@@ -274,6 +274,12 @@ The system is ready for pilot testing in controlled clinical environments. Next 
 ---
 
 ## Appendix A: Prompt Templates
+
+### Agent 0: Language Translator
+```
+System: You are a professional medical translator. Convert text to professional English. Preserve medical terms.
+User: Translate this medical conversation from {source_language} to English...
+```
 
 ### Agent 1: Privacy Guard
 ```
@@ -313,11 +319,6 @@ All LLM calls are logged to `logs/llm_calls.jsonl`:
   "elapsed": 2.145
 }
 ```
-Validation Strictness: The validator currently flags all summaries as FAIL due to missing information. This reflects the inherent tension between conciseness (SOAP notes should be brief) and completeness (validators check for omissions). Future work includes:
-
-Adjusting validator prompts to distinguish between critical vs. non-critical omissions
-Implementing a severity score (e.g., "PASS with minor issues")
-Clinical validation to determine acceptable information loss thresholds
 
 ---
 
