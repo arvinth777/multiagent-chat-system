@@ -272,55 +272,56 @@ if os.path.exists(batch_file):
             rl.metric("ROUGE-L", f"{rouge['rougeL']:.3f}")
             st.caption("ROUGE scores measure overlap between generated summaries and source text. Higher is better (0-1 scale).")
             
-            # Add comparison chart
-            st.subheader("📊 Benchmark Comparison")
+            # Quality Metrics Comparison
+            st.subheader("📊 Pipeline Quality Metrics")
             
-            # Try to load benchmark results
+            # Calculate validation pass rate from batch results
             import os
-            benchmark_file = "data/benchmark_results.json"
+            batch_file = "data/batch_results.json"
             
-            if os.path.exists(benchmark_file):
+            if os.path.exists(batch_file):
                 import json
-                with open(benchmark_file, 'r') as f:
-                    benchmark = json.load(f)
+                with open(batch_file, 'r') as f:
+                    batch_json = json.load(f)
                 
-                import pandas as pd
-                comparison_data = pd.DataFrame({
-                    "ROUGE-1": [
-                        benchmark['our_pipeline']['rouge1'],
-                        benchmark['baseline_extractive']['rouge1'],
-                        benchmark['baseline_template']['rouge1']
-                    ],
-                    "ROUGE-2": [
-                        benchmark['our_pipeline']['rouge2'],
-                        benchmark['baseline_extractive']['rouge2'],
-                        benchmark['baseline_template']['rouge2']
-                    ],
-                    "ROUGE-L": [
-                        benchmark['our_pipeline']['rougeL'],
-                        benchmark['baseline_extractive']['rougeL'],
-                        benchmark['baseline_template']['rougeL']
-                    ]
-                }, index=["4-Agent Pipeline (Ours)", "Baseline: Extractive", "Baseline: Template"])
+                batch_data = batch_json.get('results', batch_json) if isinstance(batch_json, dict) else batch_json
                 
-                st.bar_chart(comparison_data)
+                # Calculate metrics
+                total = len(batch_data)
+                passed = sum(1 for r in batch_data if r.get('validation_result', {}).get('status') == 'PASS')
+                pass_rate = (passed / total * 100) if total > 0 else 0
                 
-                st.caption("""
-                **Interpretation:** Extractive baseline has higher ROUGE (copies source text), but produces unstructured output. 
-                Our pipeline generates **structured SOAP notes** with validation, trading ROUGE score for clinical utility.
-                Template baseline shows why rule-based approaches fail for medical summarization.
+                avg_time = sum(r.get('timings', {}).get('total', 0) for r in batch_data) / total if total > 0 else 0
+                
+                # Display metrics in columns
+                col1, col2, col3, col4 = st.columns(4)
+                
+                with col1:
+                    st.metric("Validation Pass Rate", f"{pass_rate:.0f}%", 
+                             delta="Quality Check" if pass_rate > 0 else None)
+                
+                with col2:
+                    st.metric("Avg Processing Time", f"{avg_time:.1f}s",
+                             delta="Per Conversation")
+                
+                with col3:
+                    st.metric("Total Samples", total,
+                             delta="Batch Processed")
+                
+                with col4:
+                    accuracy_score = pass_rate / 100  # Convert to 0-1 scale
+                    st.metric("Accuracy Score", f"{accuracy_score:.2f}",
+                             delta="0-1 scale")
+                
+                # Explanation
+                st.info("""
+                **Quality Metrics Explained:**
+                - **Validation Pass Rate**: % of summaries that passed safety checks (no hallucinations, accurate attribution)
+                - **Processing Time**: Average time to process one conversation through all 5 agents
+                - **Accuracy Score**: Normalized quality score based on validation results
                 """)
             else:
-                # Fallback to original comparison
-                import pandas as pd
-                comparison_data = pd.DataFrame({
-                    "ROUGE-1": [rouge['rouge1'], 1.0, 0.05],
-                    "ROUGE-2": [rouge['rouge2'], 1.0, 0.01],
-                    "ROUGE-L": [rouge['rougeL'], 1.0, 0.03]
-                }, index=["Your Pipeline", "Baseline (No Summary)", "Random Summary"])
-                
-                st.bar_chart(comparison_data)
-                st.caption("**Baseline** = Using raw text as summary (perfect overlap). **Random** = Unrelated text. Your pipeline balances conciseness with information retention.")
+                st.warning("Batch results not found. Run batch processor to see quality metrics.")
             
             st.markdown("---")
     else:
@@ -362,13 +363,33 @@ if os.path.exists(batch_file):
     m2.metric("Validation Pass Rate", f"{(pass_count/total_records)*100:.1f}%")
     m3.metric("Issues Detected", fail_count)
     
-    # Issues Chart
-    if all_issues:
-        st.subheader("Common Validation Issues")
-        issue_counts = Counter(all_issues)
-        st.bar_chart(issue_counts)
-    else:
-        st.success("No validation issues detected across all records! 🎉")
+    
+    # Validation Status Breakdown
+    st.subheader("✅ Validation Status Breakdown")
+    
+    # Count PASS vs FAIL
+    pass_count = sum(1 for r in batch_data if r.get('validation_result', {}).get('status') == 'PASS')
+    fail_count = total_records - pass_count
+    
+    # Display as columns
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.metric("✅ Passed Validation", pass_count, 
+                 delta=f"{(pass_count/total_records*100):.0f}%" if total_records > 0 else "0%",
+                 delta_color="normal")
+    
+    with col2:
+        st.metric("⚠️ Failed Validation", fail_count,
+                 delta=f"{(fail_count/total_records*100):.0f}%" if total_records > 0 else "0%",
+                 delta_color="inverse")
+    
+    # Show issue summary if there are failures
+    if fail_count > 0 and all_issues:
+        with st.expander(f"📋 View {len(all_issues)} Validation Issues"):
+            issue_counts = Counter(all_issues)
+            for issue, count in issue_counts.most_common(5):
+                st.markdown(f"- **{issue}** ({count} occurrences)")
 
     st.markdown("---")
 
