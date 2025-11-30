@@ -220,8 +220,8 @@ These phrases bias the LLM toward conservative, safe outputs.
 From batch processing (5 samples):
 - **Privacy Agent:** 100% PII redaction (verified manually)
 - **Extractor:** 100% valid JSON (after retry logic)
-- **Summarizer:** ROUGE-1: 0.220, ROUGE-L: 0.127
-- **Validator:** 60% pass rate (strict mode working as intended)
+- **Summarizer:** ROUGE-1: 0.149, ROUGE-L: 0.114
+- **Validator:** 80% pass rate (strict mode working as intended)
 
 ---
 
