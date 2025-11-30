@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 from dotenv import load_dotenv
 from src.pipeline import ClinicalPipeline
 
@@ -12,24 +13,32 @@ def main():
         print("Please create a .env file with your API key.")
         return
 
-    # Sample Medical Text (Synthetic)
-    sample_text = """
-    Patient: John Doe (DOB: 05/12/1980)
-    Date: 2023-10-25
-    Location: General Hospital, Room 302
+    # Load real medical data
+    data_file = "data/medical_data.csv"
+    if not os.path.exists(data_file):
+        print(f"Error: {data_file} not found.")
+        print("Run: python src/data_loader.py to download the dataset first.")
+        return
     
-    Dr. Smith: Good morning John. What brings you in today?
-    Patient: I've been having a really bad headache for the last 3 days. It's mostly on the left side.
-    Dr. Smith: Any nausea or sensitivity to light?
-    Patient: Yes, a little bit of nausea, no vomiting though. Light definitely bothers me.
-    Dr. Smith: Okay. I see your blood pressure is 140/90, which is a bit high. 
-    I'm going to prescribe Sumatriptan 50mg to take at the onset of a headache. 
-    I also want you to take Ibuprofen 400mg as needed.
-    Let's follow up in 2 weeks.
-    """
+    # Load one sample from real data
+    df = pd.read_csv(data_file)
+    sample_text = df.iloc[0]['text']
+    
+    print("=" * 60)
+    print("TESTING CLINICAL PIPELINE WITH REAL DATA")
+    print("=" * 60)
+    print(f"\nProcessing record from: {data_file}")
+    print(f"Sample text (first 200 chars): {sample_text[:200]}...\n")
 
     pipeline = ClinicalPipeline()
-    pipeline.run(sample_text)
+    result = pipeline.run(sample_text)
+    
+    print("\n" + "=" * 60)
+    print("PIPELINE COMPLETED SUCCESSFULLY")
+    print("=" * 60)
+    print(f"\nValidation Status: {result.get('validation_result', {}).get('status', 'UNKNOWN')}")
+    if 'timings' in result:
+        print(f"Total Processing Time: {result['timings']['total']:.2f}s")
 
 if __name__ == "__main__":
     main()

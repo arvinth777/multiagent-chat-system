@@ -35,13 +35,28 @@ with col1:
     
     if st.button("Run Pipeline", type="primary"):
         if not raw_text.strip():
-            st.error("Please enter some medical text first!")
+            st.error("❌ Please enter some medical text first!")
+        elif len(raw_text.strip()) < 20:
+            st.warning("⚠️ Input text is very short. Please provide a more complete medical conversation for better results.")
         else:
-            with st.spinner("Running Agents..."):
-                pipeline = ClinicalPipeline()
-                results = pipeline.run(raw_text)
-                st.session_state['results'] = results
-                st.success("✅ Pipeline completed!")
+            try:
+                with st.spinner("Running Agents..."):
+                    pipeline = ClinicalPipeline()
+                    results = pipeline.run(raw_text)
+                    st.session_state['results'] = results
+                    st.success("✅ Pipeline completed successfully!")
+            except Exception as e:
+                st.error(f"❌ Pipeline Error: {str(e)}")
+                st.warning("This might be due to:")
+                st.markdown("""
+                - API rate limits (wait 60 seconds and try again)
+                - Invalid API key (check your .env file)
+                - Network issues
+                - Input text format issues
+                """)
+                # Log the error for debugging
+                import logging
+                logging.error(f"Pipeline execution failed: {e}")
 
 with col2:
     st.subheader("Pipeline Output")
