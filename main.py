@@ -31,14 +31,31 @@ def main():
     print(f"Sample text (first 200 chars): {sample_text[:200]}...\n")
 
     pipeline = ClinicalPipeline()
-    result = pipeline.run(sample_text)
+    
+    # Test 1: English (from dataset)
+    print("\n--- Test 1: English Sample (from dataset) ---")
+    result_en = pipeline.run(sample_text)
+    print(f"Validation Status: {result_en.get('validation_result', {}).get('status', 'UNKNOWN')}")
+
+    # Test 2: Spanish (Multilingual Support)
+    print("\n" + "=" * 60)
+    print("TESTING MULTILINGUAL SUPPORT (Agent 0)")
+    print("=" * 60)
+    
+    spanish_text = """
+    Paciente: Hola doctor, tengo mucho dolor de cabeza y fiebre desde ayer. 
+    Doctor: ¿Ha tomado algún medicamento?
+    Paciente: Sí, tomé paracetamol de 500mg esta mañana.
+    """
+    
+    print(f"Input (Spanish): {spanish_text.strip()}")
+    result_es = pipeline.run(spanish_text, source_language="Spanish")
     
     print("\n" + "=" * 60)
     print("PIPELINE COMPLETED SUCCESSFULLY")
     print("=" * 60)
-    print(f"\nValidation Status: {result.get('validation_result', {}).get('status', 'UNKNOWN')}")
-    if 'timings' in result:
-        print(f"Total Processing Time: {result['timings']['total']:.2f}s")
+    print(f"English Validation: {result_en.get('validation_result', {}).get('status', 'UNKNOWN')}")
+    print(f"Spanish Validation: {result_es.get('validation_result', {}).get('status', 'UNKNOWN')}")
 
 if __name__ == "__main__":
     main()
