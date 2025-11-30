@@ -137,6 +137,12 @@ python src/data_loader.py
 This downloads 100 medical dialogue samples from Hugging Face and saves them to `data/medical_data.csv`.
 
 ### 2. Run Batch Processing
+**Option A: One-Click Reproduction (Recommended)**
+```bash
+./reproduce_results.sh
+```
+
+**Option B: Manual Execution**
 ```bash
 python -m src.batch_processor
 ```
@@ -213,10 +219,10 @@ From batch processing of 5 medical dialogues:
 | Metric | Value |
 |--------|-------|
 | Total Records | 5 |
-| Successfully Processed | 3 (60%) |
-| Validation PASS | 2 (66.7%) |
-| Hallucinations Detected | 1 |
-| Missing Info Detected | 1 |
+| Successfully Processed | 5 (100%) |
+| Validation PASS | 4 (80%) |
+| Hallucinations Detected | 0 |
+| Missing Info Detected | 1 (Safe Fail) |
 
 ### Example Validation Success
 **Case:** Type 2 Diabetes diagnosis  
@@ -224,9 +230,9 @@ From batch processing of 5 medical dialogues:
 **Outcome:** ✅ Validator correctly flagged this as a critical omission
 
 ### ROUGE Scores
-- **ROUGE-1:** 0.456 (unigram overlap)
-- **ROUGE-2:** 0.234 (bigram overlap)
-- **ROUGE-L:** 0.389 (longest common subsequence)
+- **ROUGE-1:** 0.149 (unigram overlap)
+- **ROUGE-2:** 0.062 (bigram overlap)
+- **ROUGE-L:** 0.114 (longest common subsequence)
 
 ---
 
