@@ -275,53 +275,40 @@ if os.path.exists(batch_file):
             # Quality Metrics Comparison
             st.subheader("📊 Pipeline Quality Metrics")
             
-            # Calculate validation pass rate from batch results
-            import os
-            batch_file = "data/batch_results.json"
+            # Calculate metrics using the already loaded batch_data
+            total = len(batch_data)
+            passed = sum(1 for r in batch_data if r.get('validation_result', {}).get('status') == 'PASS')
+            pass_rate = (passed / total * 100) if total > 0 else 0
             
-            if os.path.exists(batch_file):
-                import json
-                with open(batch_file, 'r') as f:
-                    batch_json = json.load(f)
-                
-                batch_data = batch_json.get('results', batch_json) if isinstance(batch_json, dict) else batch_json
-                
-                # Calculate metrics
-                total = len(batch_data)
-                passed = sum(1 for r in batch_data if r.get('validation_result', {}).get('status') == 'PASS')
-                pass_rate = (passed / total * 100) if total > 0 else 0
-                
-                avg_time = sum(r.get('timings', {}).get('total', 0) for r in batch_data) / total if total > 0 else 0
-                
-                # Display metrics in columns
-                col1, col2, col3, col4 = st.columns(4)
-                
-                with col1:
-                    st.metric("Validation Pass Rate", f"{pass_rate:.0f}%", 
-                             delta="Quality Check" if pass_rate > 0 else None)
-                
-                with col2:
-                    st.metric("Avg Processing Time", f"{avg_time:.1f}s",
-                             delta="Per Conversation")
-                
-                with col3:
-                    st.metric("Total Samples", total,
-                             delta="Batch Processed")
-                
-                with col4:
-                    accuracy_score = pass_rate / 100  # Convert to 0-1 scale
-                    st.metric("Accuracy Score", f"{accuracy_score:.2f}",
-                             delta="0-1 scale")
-                
-                # Explanation
-                st.info("""
-                **Quality Metrics Explained:**
-                - **Validation Pass Rate**: % of summaries that passed safety checks (no hallucinations, accurate attribution)
-                - **Processing Time**: Average time to process one conversation through all 5 agents
-                - **Accuracy Score**: Normalized quality score based on validation results
-                """)
-            else:
-                st.warning("Batch results not found. Run batch processor to see quality metrics.")
+            avg_time = sum(r.get('timings', {}).get('total', 0) for r in batch_data) / total if total > 0 else 0
+            
+            # Display metrics in columns
+            col1, col2, col3, col4 = st.columns(4)
+            
+            with col1:
+                st.metric("Validation Pass Rate", f"{pass_rate:.0f}%", 
+                         delta="Quality Check" if pass_rate > 0 else None)
+            
+            with col2:
+                st.metric("Avg Processing Time", f"{avg_time:.1f}s",
+                         delta="Per Conversation")
+            
+            with col3:
+                st.metric("Total Samples", total,
+                         delta="Batch Processed")
+            
+            with col4:
+                accuracy_score = pass_rate / 100  # Convert to 0-1 scale
+                st.metric("Accuracy Score", f"{accuracy_score:.2f}",
+                         delta="0-1 scale")
+            
+            # Explanation
+            st.info("""
+            **Quality Metrics Explained:**
+            - **Validation Pass Rate**: % of summaries that passed safety checks (no hallucinations, accurate attribution)
+            - **Processing Time**: Average time to process one conversation through all 5 agents
+            - **Accuracy Score**: Normalized quality score based on validation results
+            """)
             
             st.markdown("---")
     else:

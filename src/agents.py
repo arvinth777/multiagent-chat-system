@@ -216,17 +216,20 @@ class ClinicalExtractor:
 # -------------------------
 # Agent: Summarizer
 # -------------------------
+# -------------------------
+# Agent: Summarizer
+# -------------------------
 class Summarizer:
     SYSTEM = (
         "You are a senior physician assistant creating clinical documentation. "
-        "Write a SOAP note using ONLY the information provided in the clinical data. "
-        "Do not infer, assume, or add any information not explicitly present. "
-        "Be precise about who performed actions (patient vs. doctor). "
-        "Use exact wording from the source data when describing medications, symptoms, and diagnoses. "
-        "If information is missing for a SOAP section, write 'Not documented' rather than fabricating content."
+        "Your PRIORITY is ACCURACY and COMPLETENESS over conciseness. "
+        "You MUST include ALL medications (current and new), dosages, and diagnoses found in the data. "
+        "Omitting a medication or diagnosis is a CRITICAL ERROR. "
+        "Write a SOAP note using ONLY the information provided. "
+        "Distinguish clearly between patient reports and doctor orders."
     )
 
-    def __init__(self, max_tokens: int = 400, temperature: float = 0.0):
+    def __init__(self, max_tokens: int = 600, temperature: float = 0.0):
         self.max_tokens = max_tokens
         self.temperature = temperature
 
@@ -234,18 +237,19 @@ class Summarizer:
         # Present clinical_data as JSON to the model
         prompt = (
             "Create a SOAP note using ONLY the information below. "
-            "Be extremely literal - do not add, infer, or assume anything. "
-            "Distinguish clearly between what the patient reported vs. what the doctor observed/prescribed.\n\n"
+            "CRITICAL INSTRUCTION: You must list EVERY medication and diagnosis found in the data. Do not summarize lists - be exhaustive. "
+            "If the patient lists current meds, include them in Subjective. "
+            "If the doctor prescribes meds, include them in Plan.\n\n"
             "Clinical Data:\n"
         )
         prompt += json.dumps(clinical_data, indent=2)
         prompt += (
             "\n\nFormat:\n"
-            "**Subjective:** Patient's reported symptoms and concerns (use 'patient reports...')\n"
-            "**Objective:** Doctor's observations and measurements (use 'doctor noted...' or 'vitals show...')\n"
-            "**Assessment:** Diagnoses mentioned (use 'diagnosed with...' or 'suspected...')\n"
-            "**Plan:** Treatment prescribed by doctor (use 'doctor prescribed...' not 'patient will take...')\n\n"
-            "Be concise but accurate. Only include what's in the data."
+            "**Subjective:** Patient's reported symptoms, history, CURRENT MEDICATIONS, and QUESTIONS/CONCERNS (use 'patient reports...').\n"
+            "**Objective:** Doctor's observations, vitals, and physical exam findings.\n"
+            "**Assessment:** All diagnoses mentioned (confirmed or suspected).\n"
+            "**Plan:** ALL treatments, new prescriptions, RECOMMENDATIONS (e.g., diet, exercise, OTC meds), and follow-up instructions.\n\n"
+            "Review your output: Did you include every single medication name and dosage from the input? If not, fix it."
         )
         try:
             resp = _llm_call_with_logging(prompt=prompt, system=self.SYSTEM, temperature=self.temperature, max_tokens=self.max_tokens)
