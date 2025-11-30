@@ -94,6 +94,7 @@ class ClinicalPipeline:
         }
         
         # Add translation info if used
+        if translation_used:
             result["translation"] = {
                 "source_language": source_language,
                 "original_text": raw_text[:500],  # Store preview
