@@ -104,7 +104,62 @@ with col2:
         with tab2:
             st.markdown("### Agent 2: Clinical Extractor")
             st.info("Extracts structured entities")
-            st.markdown(results['extracted_info'])
+            
+            # Display extracted data
+            extracted = results.get('extracted_info', {})
+            if isinstance(extracted, dict):
+                st.json(extracted)
+            else:
+                st.markdown(extracted)
+            
+            # Explainability section
+            st.markdown("---")
+            with st.expander("🔍 **Show Agent Reasoning** (Explainability)"):
+                st.markdown("### How the Extractor Works")
+                
+                st.markdown("**Step 1: Text Analysis**")
+                st.code("""
+Input: Anonymized medical conversation
+↓
+Agent scans for clinical patterns:
+- Symptom keywords (pain, fever, cough, etc.)
+- Medication mentions (dosage + frequency)
+- Vital signs (BP, HR, Temp)
+- Diagnosis statements
+                """, language="text")
+                
+                st.markdown("**Step 2: Structured Extraction**")
+                source_text = results.get('anonymized_text', '')[:500]
+                st.text_area("Source Text (first 500 chars)", source_text, height=100, disabled=True)
+                
+                st.markdown("**Step 3: Entity Mapping**")
+                if isinstance(extracted, dict):
+                    # Show what was found
+                    st.markdown("**Detected Entities:**")
+                    
+                    if extracted.get('symptoms'):
+                        st.success(f"✅ **Symptoms:** {len(extracted['symptoms'])} found")
+                        for i, symptom in enumerate(extracted['symptoms'][:3], 1):
+                            st.caption(f"{i}. {symptom}")
+                    
+                    if extracted.get('medications'):
+                        st.success(f"✅ **Medications:** {len(extracted['medications'])} found")
+                        for i, med in enumerate(extracted['medications'][:3], 1):
+                            st.caption(f"{i}. {med.get('name', 'Unknown')} - {med.get('dosage', 'N/A')}")
+                    
+                    if extracted.get('diagnoses'):
+                        st.success(f"✅ **Diagnoses:** {len(extracted['diagnoses'])} found")
+                        for i, dx in enumerate(extracted['diagnoses'][:3], 1):
+                            st.caption(f"{i}. {dx}")
+                    
+                    if extracted.get('vitals'):
+                        vitals = extracted['vitals']
+                        vital_count = sum(1 for v in vitals.values() if v)
+                        if vital_count > 0:
+                            st.success(f"✅ **Vitals:** {vital_count} measurements")
+                
+                st.markdown("**Step 4: JSON Schema Validation**")
+                st.caption("Output is validated against predefined schema before returning")
             
         with tab3:
             st.markdown("### Agent 3: Summarizer")
