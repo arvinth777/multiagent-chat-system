@@ -218,8 +218,12 @@ class ClinicalExtractor:
 # -------------------------
 class Summarizer:
     SYSTEM = (
-        "You are a senior physician assistant. Write a concise, professional SOAP note from the clinical data. "
-        "Output plain text."
+        "You are a senior physician assistant creating clinical documentation. "
+        "Write a SOAP note using ONLY the information provided in the clinical data. "
+        "Do not infer, assume, or add any information not explicitly present. "
+        "Be precise about who performed actions (patient vs. doctor). "
+        "Use exact wording from the source data when describing medications, symptoms, and diagnoses. "
+        "If information is missing for a SOAP section, write 'Not documented' rather than fabricating content."
     )
 
     def __init__(self, max_tokens: int = 400, temperature: float = 0.0):
@@ -228,8 +232,21 @@ class Summarizer:
 
     def run(self, clinical_data: dict) -> Dict[str, Any]:
         # Present clinical_data as JSON to the model
-        prompt = "Write a SOAP note (Subjective, Objective, Assessment, Plan) using this structured clinical data:\n\n"
+        prompt = (
+            "Create a SOAP note using ONLY the information below. "
+            "Be extremely literal - do not add, infer, or assume anything. "
+            "Distinguish clearly between what the patient reported vs. what the doctor observed/prescribed.\n\n"
+            "Clinical Data:\n"
+        )
         prompt += json.dumps(clinical_data, indent=2)
+        prompt += (
+            "\n\nFormat:\n"
+            "**Subjective:** Patient's reported symptoms and concerns (use 'patient reports...')\n"
+            "**Objective:** Doctor's observations and measurements (use 'doctor noted...' or 'vitals show...')\n"
+            "**Assessment:** Diagnoses mentioned (use 'diagnosed with...' or 'suspected...')\n"
+            "**Plan:** Treatment prescribed by doctor (use 'doctor prescribed...' not 'patient will take...')\n\n"
+            "Be concise but accurate. Only include what's in the data."
+        )
         try:
             resp = _llm_call_with_logging(prompt=prompt, system=self.SYSTEM, temperature=self.temperature, max_tokens=self.max_tokens)
             # small sanity check
