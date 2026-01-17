@@ -4,13 +4,13 @@
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Streamlit](https://img.shields.io/badge/Streamlit-Demo-FF4B4B?logo=streamlit)](https://share.streamlit.io/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-Demo-FF4B4B?logo=streamlit)](https://multiagent-chat-system-pjmgznq7ze2gyxvyjyjh46.streamlit.app/)
 
 > A 5-agent AI pipeline that processes medical dialogues, generates structured SOAP notes, and validates outputs to prevent hallucinations.
 
 ## 🎯 Live Demo
 
-**Try the interactive demo:** [Launch Streamlit App](https://share.streamlit.io/) *(Deploy to get your custom URL)*
+**Try the interactive demo:** [🚀 Launch Streamlit App](https://multiagent-chat-system-pjmgznq7ze2gyxvyjyjh46.streamlit.app/)
 
 Experience the full 5-agent pipeline with:
 - 🌐 **Multilingual Translation** (Spanish, French, Hindi, Tamil)
