@@ -4,8 +4,21 @@
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Streamlit](https://img.shields.io/badge/Streamlit-Demo-FF4B4B?logo=streamlit)](https://share.streamlit.io/)
 
 > A 5-agent AI pipeline that processes medical dialogues, generates structured SOAP notes, and validates outputs to prevent hallucinations.
+
+## 🎯 Live Demo
+
+**Try the interactive demo:** [Launch Streamlit App](https://share.streamlit.io/) *(Deploy to get your custom URL)*
+
+Experience the full 5-agent pipeline with:
+- 🌐 **Multilingual Translation** (Spanish, French, Hindi, Tamil)
+- 🛡️ **HIPAA-Compliant Privacy Protection**
+- 📋 **Clinical Entity Extraction**
+- 📝 **SOAP Note Generation**
+- ✅ **Hallucination Detection & Validation**
+
 
 ---
 
@@ -106,6 +119,20 @@ Create a `.env` file in the project root:
 GOOGLE_API_KEY=your_gemini_api_key_here
 HF_TOKEN=your_huggingface_token_here
 ```
+
+### Deploy to Streamlit Cloud
+
+For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+**Quick Deploy:**
+1. Push this repository to GitHub
+2. Go to [share.streamlit.io](https://share.streamlit.io/)
+3. Connect your repository
+4. Set `GOOGLE_API_KEY` in Streamlit Cloud secrets
+5. Deploy!
+
+Your app will be live at: `https://yourusername-multiagent-chat-system.streamlit.app`
+
 
 ---
 
